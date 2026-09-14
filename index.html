@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuantumLab — Interactive Physics Simulator</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root{--bg:#07111f;--panel:#0d1b2d;--panel2:#11253b;--text:#eaf4ff;--muted:#9eb3c9;--accent:#55d6ff;--accent2:#9b7cff;--green:#56e39f;--danger:#ff7187;--border:#23405c}
+*{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;font-family:Inter,system-ui,Segoe UI,sans-serif;background:radial-gradient(circle at 15% 10%,#17365a 0,transparent 30%),radial-gradient(circle at 90% 20%,#2a1d58 0,transparent 28%),var(--bg);color:var(--text)}
+header{position:sticky;top:0;z-index:10;background:#07111fcc;backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+nav{max-width:1200px;margin:auto;padding:14px 20px;display:flex;justify-content:space-between;align-items:center}.logo{font-weight:800;letter-spacing:.5px}.logo span{color:var(--accent)}
+nav a{color:var(--muted);text-decoration:none;margin-left:18px;font-size:14px}.btn{border:0;border-radius:12px;padding:10px 15px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#06101b;font-weight:800;cursor:pointer}
+.hero{min-height:78vh;display:grid;place-items:center;padding:70px 20px;text-align:center}.hero-inner{max-width:900px}.badge{display:inline-block;padding:8px 13px;border:1px solid #376486;border-radius:999px;color:var(--accent);background:#0b1e31}.hero h1{font-size:clamp(42px,7vw,82px);line-height:.98;margin:22px 0}.gradient{background:linear-gradient(90deg,var(--accent),#fff,var(--accent2));-webkit-background-clip:text;color:transparent}.hero p{max-width:700px;margin:auto;color:var(--muted);font-size:18px;line-height:1.7}.hero-buttons{margin-top:30px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}.ghost{background:#10253a;color:var(--text);border:1px solid var(--border)}
+section{max-width:1200px;margin:auto;padding:70px 20px}.section-title{font-size:34px;margin:0 0 10px}.section-sub{color:var(--muted);max-width:750px;line-height:1.6}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px}.card{background:linear-gradient(145deg,#0e2034dd,#0a1728dd);border:1px solid var(--border);border-radius:20px;padding:22px;box-shadow:0 20px 60px #0004}.card h3{margin-top:0}.card p{color:var(--muted);line-height:1.55}.sim-grid{display:grid;grid-template-columns:330px 1fr;gap:18px}.controls label{display:block;font-size:13px;color:var(--muted);margin-top:14px}.controls input,.controls select,.controls textarea{width:100%;margin-top:7px;background:#071525;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:10px}.controls input[type=range]{padding:0}.control-row{display:flex;gap:10px}.control-row>*{flex:1}.graphbox{background:#071525;border:1px solid var(--border);border-radius:16px;padding:16px;min-height:380px}.graphbox canvas{width:100%!important;height:360px!important}.pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#12314a;color:var(--accent);font-size:12px}.constants{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}.constant{padding:16px;background:#091a2b;border:1px solid var(--border);border-radius:14px}.constant b{display:block;margin-bottom:5px}.constant small{color:var(--muted)}.note{border-left:3px solid var(--accent);padding:15px 18px;background:#0a1b2d;color:#c8d8e8;border-radius:8px;line-height:1.65}.tabs{display:flex;gap:8px;overflow:auto;margin:20px 0}.tab{white-space:nowrap;padding:10px 15px;border:1px solid var(--border);background:#0c1d30;color:var(--muted);border-radius:10px;cursor:pointer}.tab.active{color:#07111f;background:var(--accent);font-weight:800}.hidden{display:none!important}.formula{font-family:ui-monospace,monospace;background:#071525;border:1px solid var(--border);padding:12px;border-radius:10px;color:#bdeaff;overflow:auto}.footer{text-align:center;padding:40px;color:var(--muted);border-top:1px solid var(--border)}
+.slider-row{display:flex;justify-content:space-between;font-size:13px}.metric{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}.metric div{background:#0b1d2f;padding:12px;border-radius:12px;text-align:center}.metric b{display:block;font-size:18px;color:var(--green)}
+#intro{animation:rise 1s ease both}@keyframes rise{from{opacity:0;transform:translateY(25px)}to{opacity:1;transform:none}} .reveal{opacity:0;transform:translateY(20px);transition:.7s}.reveal.show{opacity:1;transform:none}
+@media(max-width:800px){.sim-grid{grid-template-columns:1fr}nav .links{display:none}.hero{min-height:70vh}}
+</style>
+</head>
+<body>
+<header><nav><div class="logo">⚛ <span>Quantum</span>Lab</div><div class="links"><a href="#simulators">Simulators</a><a href="#constants">Constants</a><a href="#custom">Create Graph</a><a href="#notes">Notes</a></div><a class="btn" href="#simulators">Start</a></nav></header>
+
+<main>
+<section class="hero" id="intro"><div class="hero-inner">
+<div class="badge">First-Year Engineering Physics • Interactive Lab</div>
+<h1>Turn equations into <span class="gradient">experiments.</span></h1>
+<p>Explore semiconductor physics, PN-junction I–V characteristics, quantum mechanics, oscillations and numerical methods through live simulations. Change parameters, watch the graphs respond, and learn the physics behind them.</p>
+<div class="hero-buttons"><a class="btn" href="#simulators">Explore simulations</a><a class="btn ghost" href="#custom">Build your own graph</a></div>
+</div></section>
+
+<section id="simulators" class="reveal"><h2 class="section-title">Simulation Lab</h2><p class="section-sub">Choose a model and adjust its physical parameters. Graphs update instantly so you can investigate cause and effect.</p>
+<div class="tabs"><button class="tab active" onclick="showSim('iv',this)">PN Junction I–V</button><button class="tab" onclick="showSim('quantum',this)">Quantum Particle</button><button class="tab" onclick="showSim('shm',this)">SHM</button><button class="tab" onclick="showSim('heat',this)">Heat Diffusion</button></div>
+
+<div id="iv" class="sim-grid sim-panel">
+<div class="card controls">
+<span class="pill">Semiconductor</span><h3>PN Junction</h3>
+<label>Temperature (K)<div class="slider-row"><span>250</span><b id="tempVal">300 K</b><span>450</span></div><input id="temp" type="range" min="250" max="450" value="300" oninput="runIV()"></label>
+<label>Saturation current Is (A)<input id="is" type="number" value="1e-12" step="1e-12"></label>
+<label>Ideality factor n<input id="ideality" type="number" value="1" min=".5" max="2" step=".1"></label>
+<label>Voltage range (V)<input id="vmax" type="number" value="0.9" min=".2" max="2" step=".1"></label>
+<button class="btn" style="width:100%;margin-top:18px" onclick="runIV()">Run simulation</button>
+<div class="metric"><div><small>Thermal voltage</small><b id="vt">25.85 mV</b></div><div><small>Model</small><b>Shockley</b></div><div><small>Points</small><b>200</b></div></div>
+</div><div class="graphbox"><canvas id="ivChart"></canvas></div></div>
+
+<div id="quantum" class="sim-grid sim-panel hidden"><div class="card controls"><span class="pill">Quantum mechanics</span><h3>Particle in a Box</h3>
+<label>Quantum number n<input id="qn" type="range" min="1" max="8" value="1" oninput="runQuantum()"></label>
+<div class="metric"><div><small>n</small><b id="qnVal">1</b></div><div><small>Shape</small><b>ψ(x)</b></div><div><small>Probability</small><b>|ψ|²</b></div></div>
+<div class="note" style="margin-top:18px">A confined particle has discrete energy levels. Changing <b>n</b> changes the number of wavefunction half-waves inside the box.</div></div><div class="graphbox"><canvas id="qChart"></canvas></div></div>
+
+<div id="shm" class="sim-grid sim-panel hidden"><div class="card controls"><span class="pill">Oscillations</span><h3>Simple Harmonic Motion</h3>
+<label>Amplitude (m)<input id="amp" type="number" value="1" min=".1" max="5" step=".1"></label>
+<label>Angular frequency ω (rad/s)<input id="omega" type="number" value="2" min=".2" max="10" step=".1"></label>
+<button class="btn" style="width:100%;margin-top:18px" onclick="runSHM()">Run simulation</button>
+<div class="note" style="margin-top:18px">For ideal SHM, x(t) = A cos(ωt). The graph shows displacement versus time.</div></div><div class="graphbox"><canvas id="shmChart"></canvas></div></div>
+
+<div id="heat" class="sim-grid sim-panel hidden"><div class="card controls"><span class="pill">Numerical physics</span><h3>1D Heat Diffusion</h3>
+<label>Initial hot temperature (°C)<input id="hot" type="number" value="100" min="20" max="300"></label>
+<label>Diffusion strength<input id="alpha" type="range" min=".05" max=".45" step=".01" value=".20"></label>
+<label>Time steps<input id="steps" type="number" value="30" min="5" max="100"></label>
+<button class="btn" style="width:100%;margin-top:18px" onclick="runHeat()">Run simulation</button>
+<div class="note" style="margin-top:18px">The finite-difference model estimates how temperature spreads along a one-dimensional rod.</div></div><div class="graphbox"><canvas id="heatChart"></canvas></div></div>
+</section>
+
+<section id="constants" class="reveal"><h2 class="section-title">Constants & Model Values</h2><p class="section-sub">A quick reference for the constants commonly used by the simulations. Values can be changed in the simulator when the model allows it.</p>
+<div class="constants">
+<div class="constant"><b>q — Electron charge</b><span>1.602176634 × 10⁻¹⁹ C</span><small>Exact SI value</small></div>
+<div class="constant"><b>k — Boltzmann constant</b><span>1.380649 × 10⁻²³ J/K</span><small>Exact SI value</small></div>
+<div class="constant"><b>h — Planck constant</b><span>6.62607015 × 10⁻³⁴ J·s</span><small>Exact SI value</small></div>
+<div class="constant"><b>ħ — Reduced Planck</b><span>1.054571817 × 10⁻³⁴ J·s</span><small>h / 2π</small></div>
+<div class="constant"><b>ε₀ — Vacuum permittivity</b><span>8.8541878128 × 10⁻¹² F/m</span><small>Reference value</small></div>
+<div class="constant"><b>c — Speed of light</b><span>299,792,458 m/s</span><small>Exact SI value</small></div>
+<div class="constant"><b>Vₜ — Thermal voltage</b><span>kT/q</span><small>Depends on temperature</small></div>
+<div class="constant"><b>n — Ideality factor</b><span>Usually ~1–2</span><small>Device/model parameter</small></div>
+</div></section>
+
+<section id="custom" class="reveal"><h2 class="section-title">Create Your Own Graph</h2><p class="section-sub">Enter a mathematical function and choose the x-range. This lets you experiment beyond the built-in physics labs.</p>
+<div class="sim-grid"><div class="card controls">
+<label>Function y = <input id="customFn" value="sin(x)" placeholder="e.g. sin(x), x^2, exp(-x)"></label>
+<label>Minimum x<input id="xmin" type="number" value="-10"></label><label>Maximum x<input id="xmax" type="number" value="10"></label>
+<button class="btn" style="width:100%;margin-top:18px" onclick="runCustom()">Create graph</button>
+<div class="note" style="margin-top:18px">Try <b>sin(x)</b>, <b>x^2</b>, <b>cos(x)*exp(-0.1*x^2)</b>, or <b>1/x</b>. Use JavaScript-style functions.</div>
+</div><div class="graphbox"><canvas id="customChart"></canvas></div></div></section>
+
+<section id="notes" class="reveal"><h2 class="section-title">Quick Physics Notes</h2><div class="grid">
+<div class="card"><h3>🔋 PN Junction I–V</h3><p>The Shockley diode equation models current as a function of applied voltage. Temperature affects the thermal voltage, so changing temperature changes the predicted curve.</p><div class="formula">I = Iₛ [ exp(qV/nkT) − 1 ]</div></div>
+<div class="card"><h3>⚛️ Quantum particle</h3><p>For an infinite one-dimensional box, allowed energies are quantized. The quantum number n determines the standing-wave pattern.</p><div class="formula">Eₙ = n²h² / 8mL²</div></div>
+<div class="card"><h3>〰️ SHM</h3><p>Simple harmonic motion is periodic motion where the restoring effect is proportional to displacement. The ideal solution is sinusoidal.</p><div class="formula">x(t) = A cos(ωt)</div></div>
+<div class="card"><h3>🌡️ Heat diffusion</h3><p>The heat equation describes how temperature varies with position and time. Numerical finite differences let a computer approximate its solution.</p><div class="formula">∂T/∂t = α ∂²T/∂x²</div></div>
+<div class="card"><h3>🧮 Numerical methods</h3><p>Euler and Runge–Kutta methods approximate differential equations step by step. They are useful when an analytical solution is difficult.</p></div>
+<div class="card"><h3>📊 Read a graph</h3><p>Always identify the axes, units, parameter values and model assumptions before interpreting a curve. Change one parameter at a time to see its effect clearly.</p></div>
+</div></section>
+</main>
+<footer class="footer">QuantumLab • A student-friendly computational physics laboratory • Built for learning and experimentation</footer>
+
+<script>
+const charts={};
+function chart(id,label,labels,data,xlab='x',ylab='y'){
+ if(charts[id]) charts[id].destroy();
+ charts[id]=new Chart(document.getElementById(id),{type:'line',data:{labels,datasets:[{label,data,borderWidth:2,pointRadius:0,tension:.15}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#eaf4ff'}}},scales:{x:{title:{display:true,text:xlab,color:'#9eb3c9'},ticks:{color:'#9eb3c9'},grid:{color:'#183047'}},y:{title:{display:true,text:ylab,color:'#9eb3c9'},ticks:{color:'#9eb3c9'},grid:{color:'#183047'}}}}});
+}
+function showSim(id,el){document.querySelectorAll('.sim-panel').forEach(x=>x.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));el.classList.add('active'); if(id==='iv')runIV();if(id==='quantum')runQuantum();if(id==='shm')runSHM();if(id==='heat')runHeat();}
+function runIV(){
+ let T=+temp.value, Is=+document.getElementById('is').value, n=+ideality.value, vmax=+document.getElementById('vmax').value;
+ tempVal.textContent=T+' K'; let Vt=1.380649e-23*T/1.602176634e-19; vt.textContent=(Vt*1000).toFixed(2)+' mV';
+ let xs=[],ys=[];for(let i=0;i<200;i++){let V=-.2+(vmax+.2)*i/199;let I=Is*(Math.exp(Math.min(700,V/(n*Vt)))-1);xs.push(V.toFixed(3));ys.push(I);}
+ chart('ivChart','I–V',xs,ys,'Voltage (V)','Current (A)');
+}
+function runQuantum(){let n=+qn.value;qnVal.textContent=n;let xs=[],psi=[],prob=[];for(let i=0;i<=200;i++){let x=i/200;let p=Math.sin(n*Math.PI*x);xs.push(x.toFixed(3));psi.push(p);prob.push(p*p);}chart('qChart','Wavefunction ψ(x)',xs,psi,'Position / L','ψ(x)');}
+function runSHM(){let A=+amp.value,w=+omega.value;let xs=[],ys=[];for(let i=0;i<250;i++){let t=10*i/249;xs.push(t.toFixed(2));ys.push(A*Math.cos(w*t));}chart('shmChart','Displacement',xs,ys,'Time (s)','x (m)');}
+function runHeat(){let hot0=+hot.value,a=+alpha.value,steps0=+steps.value,N=31;let u=Array(N).fill(20);u[Math.floor(N/2)]=hot0;for(let s=0;s<steps0;s++){let v=u.slice();for(let i=1;i<N-1;i++)v[i]=u[i]+a*(u[i-1]-2*u[i]+u[i+1]);u=v;}let xs=u.map((_,i)=>i);chart('heatChart','Temperature after simulation',xs,u,'Position','Temperature (°C)');}
+function runCustom(){
+ let f=document.getElementById('customFn').value.replaceAll('^','**').replace(/\bsin\b/g,'Math.sin').replace(/\bcos\b/g,'Math.cos').replace(/\btan\b/g,'Math.tan').replace(/\bexp\b/g,'Math.exp').replace(/\bsqrt\b/g,'Math.sqrt').replace(/\blog\b/g,'Math.log').replace(/\babs\b/g,'Math.abs').replace(/\bpi\b/gi,'Math.PI');
+ let lo=+xmin.value,hi=+xmax.value,xs=[],ys=[];try{let fun=new Function('x','return '+f);for(let i=0;i<300;i++){let x=lo+(hi-lo)*i/299,y=fun(x);xs.push(x.toFixed(3));ys.push(Number.isFinite(y)?y:null)}chart('customChart','y = '+document.getElementById('customFn').value,xs,ys,'x','y')}catch(e){alert('Could not read that function. Try sin(x), x^2, exp(-x), etc.');}}
+document.getElementById('temp').addEventListener('input',()=>tempVal.textContent=temp.value+' K');
+runIV();runQuantum();runSHM();runHeat();runCustom();
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('show')}),{threshold:.12});document.querySelectorAll('.reveal').forEach(e=>obs.observe(e));
+</script>
+</body>
+</html>
